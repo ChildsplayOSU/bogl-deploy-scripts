@@ -1,0 +1,6 @@
+[submodule "Spiel-Front"]
+	path = Spiel-Front
+	url = https://github.com/The-Code-In-Sheep-s-Clothing/Spiel-Front
+[submodule "Spiel-Lang"]
+	path = Spiel-Lang
+	url = https://github.com/The-Code-In-Sheep-s-Clothing/Spiel-Lang
