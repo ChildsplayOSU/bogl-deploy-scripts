@@ -1,0 +1,80 @@
+#
+# NGINX Website Config File
+# bogl.engr.oregonstate.edu
+#
+# Created July 16th, 2020
+# Benjamin Wilson Friedman
+# Intended for use w/ the CSforAll curriculum
+#
+# Serves the static website over HTTPS
+# Proxies requests from the static website to the backend over port 5174
+#
+
+# insecure to secure redirect
+server {
+	listen 80;
+	listen [::]:80;
+	server_name bogl.engr.oregonstate.edu;
+	return 301 https://$server_name$request_uri;
+}
+
+
+# old port redirect to new port
+server {
+	listen 5168 ssl;
+	listen [::]:5168 ssl;
+	server_name bogl.engr.oregonstate.edu;
+	ssl_certificate /etc/letsencrypt/live/bogl.engr.oregonstate.edu/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/bogl.engr.oregonstate.edu/privkey.pem;
+	return 301 https://bogl.engr.oregonstate.edu:443;
+}
+
+
+# secured port
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	server_name bogl.engr.oregonstate.edu;
+
+	ssl_certificate /etc/letsencrypt/live/bogl.engr.oregonstate.edu/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/bogl.engr.oregonstate.edu/privkey.pem;
+
+	root /home/ubuntu/Spiel-Front/build/;
+
+	index index.html index.htm;
+
+
+	location / {
+		# try to serve as file, then dir, then 404 error
+		try_files $uri $uri/ =404; 
+	}
+
+	#
+	# Internal request proxying to the BoGL language server
+	#
+	location /api_1/test {
+		proxy_pass http://localhost:5174/test/;
+	}
+	location /api_1/share {
+		proxy_pass http://localhost:5174/share/;
+	}
+	location /api_1/load {
+		proxy_pass http://localhost:5174/load/;
+	}
+	location /api_1/runCode {
+	
+		# handle preflight CORs requests
+		if ($request_method = OPTIONS) {
+			# change this to be the other domain...
+			add_header Access-Control-Allow-Origin http://localhost;
+            		add_header Content-Length 0;
+			add_header Access-Control-Allow-Methods 'GET, OPTIONS, POST';
+        		add_header Access-Control-Allow-Headers 'Allow,Content-Type';    
+			return 204;
+        	}
+
+		proxy_pass http://localhost:5174/runCode/;
+	}
+		
+}
