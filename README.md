@@ -1,9 +1,13 @@
 # Spiel (Full stack for the Spiel implementation of BoGL)
 This repo holds all the configuration items that are needed to deploy a running BoGL instance on a machine.
 
+Run **install-spiel.sh** first, then continue.
+
 The following assumes you have **Spiel-Lang** and **Spiel-Front** directories located immediately where the scripts are, and that both have been installed and can be built successfully on the given machine. Both are added as submodules, and can be initialized by running **git submodule init** and **git submodule update**. This will initialize the local config file, and then fetch thte data for that sub-repo.
 
 ## Running Scripts
+- install-spiel.sh
+	- Installs everything you will need on your system to run Haskell, the webserver, React, and more. **Run this first**.
 - auto_restart.sh
 	- automatically reboots the instance in case it turns off (crashes), or during updates. This is regulated by an addition to your CRON file as so:
 - fireup.sh
@@ -15,6 +19,12 @@ The following assumes you have **Spiel-Lang** and **Spiel-Front** directories lo
 
 **fireup.sh** is sufficient to start up *everything* and auto-update, so long as the Spiel-Lang and Spiel-Front repositories are located in the same folder.
 
+
+## Additional Files
+- spiel_server_setup.txt
+	- contains some hand written notes on setting up things, this may be helpful if you get stuck or want to make additional changes
+- ex_runcmd_bogl_curl.txt
+	- provides a drop-in example of making a local **curl** request to test the REST endpoints via a POST request. Handy for verifying things are running before you test out the website directly. 
 
 ## CRON file changes
 Assuming your home folder is `/home/ubuntu`, you may use the following, and if not make sure to adjust to your home folder accordingly. This sets up a weak monitoring system that will auto reboot in case it crashes out, and logs any restarts.

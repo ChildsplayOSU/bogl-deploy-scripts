@@ -1,0 +1,17 @@
+:: steps for running on flip ::
+1. In back, change port & url for backend in src/API/Server.hs (i.e, make sure if NOT over remote, do not allow that...)
+    - for osu: http://access.oregonstate.edu:5167 (DO NOT USE 'orst' for the backend, the requests will fail outright)
+2. In back, run ./release_tools/linux/release.sh to rebuild the new server (i.e for a new version)
+3. In back, ./spielserver to get it running
+4. In back, verify if can be reachable remotely (when connected via the vpn)
+    - curl engr.orst.edu:####/test/
+5. In front, run "npm install"...
+    - if issues, install nvm from here (https://github.com/nvm-sh/nvm)
+    - nvm install 11 (or nvm install 12)
+    - node --version should report v11.X.X or v12.X.X
+    - Then try "npm install" again
+6. In front, change port # in SPIEL_API to match server port, located in src/Run/Run.tsx
+7. In front, change port for frontend to something nonstandard in package.json (ex. change start script to "PORT=5168 react-scripts start")
+8. Run "npm start" to fire it up
+9. Connect to the instance remotely over the indicated port #
+    - http://engr.orst.edu:####/

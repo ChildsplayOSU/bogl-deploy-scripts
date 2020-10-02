@@ -1,0 +1,5 @@
+curl --verbose --request POST --header "Content-Type: application/json" --data '{"file":"game TestGame\ntype Board=Array(1,1) of Int\ntype Input = Int\nf1 : Int\nf1 = 2", "input":"f1","buffer":[],"prelude":""}' http://localhost:5168/api_1/runCode
+
+
+
+curl --verbose --request POST --header "Content-Type: application/json" --data '{"file":"game TestGame\ntype Board=Array(1,1) of Int\ntype Input = Int\nf1 : Int\nf1 = 2", "input":"f1","buffer":[],"prelude":""}' http://ec2-3-16-56-139.us-east-2.compute.amazonaws.com:5168/api_1/runCode
