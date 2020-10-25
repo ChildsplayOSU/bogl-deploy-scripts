@@ -42,4 +42,6 @@ dt=`date +"%F-%T"`
 
 # rebuild the frontend, nginx will auto serve the new content
 cd Spiel-Front/
+# verify all new packages are downloaded before a build is attempted
+npm install
 npm run build
