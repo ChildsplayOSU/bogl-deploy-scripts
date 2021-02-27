@@ -1,16 +1,26 @@
-# install for spiel stuff
+# install for BoGL stuff
 #
 # NOTE: The box MUST have >= 4GB of Ram
 # otherwise the installation process WILL FAIL
 #
+
+echo ""
+echo "This Script will install the stack for running a BoGL language server,"
+echo "along with the frontend and all supporting components."
+echo ""
+echo "What you will need during this process:"
+echo "- A valid domain name that you can generate a certificate for (like bogl.engr.oregonstate.edu)"
+echo ""
+echo "[Hit enter to continue if you're ready]"
+read qqq
 
 # update the server in advance
 sudo apt update
 sudo apt upgrade
 
 # clone repos
-git clone https://github.com/The-Code-In-Sheep-s-Clothing/Spiel-Lang.git
-git clone https://github.com/The-Code-In-Sheep-s-Clothing/Spiel-Front.git
+git clone https://github.com/The-Code-In-Sheep-s-Clothing/bogl.git
+git clone https://github.com/The-Code-In-Sheep-s-Clothing/bogl-editor.git
 
 # setup dev deps
 sudo apt install haskell-stack
@@ -24,16 +34,9 @@ sudo apt install npm
 # setup nginx for the webserver
 sudo apt-get install nginx
 
-#
-#
-#
-# TODO NEED TO WRITE IN YOUR OWN SERVER SETUP FOR THIS SITE
-# Use the NGINX guide here (https://nginx.org/en/docs/beginners_guide.html), and add a config file to /etc/nginx/sites-available/,
-# then sym-link this to sites-enabled (standard practice)
-# Must have /api_1/share | test | load | runCode endpoints setup for port (5174)
-# Use proxy_pass for this, very easy, direct line
-#
-#
+# Copy over & setup the nginx config
+sudo cp nginx_config/bogl_nginx_config /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/bogl_nginx_config /etc/nginx/sites-enabled/bogl_nginx_config
 
 # certbot setup for TLS certs
 sudo apt-get update
@@ -57,32 +60,22 @@ read ccc
 sudo certbot certonly --standalone
 
 echo ""
-echo "Make a note of the Cert & Key file generated, you will need these to setup HTTPS for React"
+echo "Make a note of the Cert & Key file generated, you will need these to setup HTTPS for the site"
 echo ""
 echo "Hit Enter to continue"
 echo ""
 read ccc
 
-# build Spiel server
-cd Spiel-Lang
-stack install
-stack build
-./release_tools/linux/release.sh
-cd ..
+# move contents over for site
+mkdir -p /var/www/html/bogl
+mkdir -p /var/www/html/errors
+mkdir -p /var/www/html/bogl/docs
+mkdir -p /var/www/html/bogl/editor
 
-# build Spiel front
-cd Spiel-Front
-npm install
-cd ..
+cp var/www/html/errors/*.html /var/www/html/errors/
 
-echo ""
-echo "* Please change the port # in package.json to PORT=XXX react-scripts start"
-echo "* Please change the server addr in src/Run/Run.tsx to http://IP:PORT"
-echo "Hit Enter to continue"
-echo ""
-read ccc
-vim package.json
-vim src/Run/Run.tsx
+# build everything
+./build.sh
 
 # start everything up
-./fireup
+./boot.sh

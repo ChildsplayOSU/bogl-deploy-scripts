@@ -1,46 +1,45 @@
-# Spiel (Full stack for the Spiel implementation of BoGL)
-This repo holds all the configuration items that are needed to deploy a running BoGL instance on a machine.
+# BoGL Deploy Scripts
 
-Run **install-spiel.sh** first, then continue.
+Bash scripts for installing and managing a BoGL stack. NGINX configuration for serving backend & frontend as a unified system. Additional asset files to copy over to set up a new system from scratch.
 
-The following assumes you have **Spiel-Lang** and **Spiel-Front** directories located immediately where the scripts are, and that both have been installed and can be built successfully on the given machine. Both are added as submodules, and can be initialized by running **git submodule init** and **git submodule update**. This will initialize the local config file, and then fetch thte data for that sub-repo.
+## Purpose
 
-## Running Scripts
-- install-spiel.sh
-	- Installs everything you will need on your system to run Haskell, the webserver, React, and more. **Run this first**.
+This repo (and this document) include the materials and the steps outlined below to create a BoGL stack on a Unix-based system from scratch (with an implicit emphasis on Ubuntu).
+
+## Installing
+
+First clone this repo on the machine you wish to build a system on.
+```
+git clone https://github.com/The-Code-In-Sheep-s-Clothing/bogl-deploy-scripts.git
+```
+
+Run `./setup.sh`. This will install all necessary dependencies, and setup most of the environment you need to have the BoGL server work. This will also get an initial server running.
+
+Then add the following lines to your cronfile (using `crontab -e`). Adjust the paths accordingly for wherever you installed the scripts. These will check to keep the instance alive, and will automatically stop, update, and reboot once a day.
+```bash
+# auto reboot every minute
+* * * * * /home/ubuntu/bogl-deploy-scripts/./auto_restart.sh >> /home/ubuntu/bogl-restarts.log
+
+# shuts down and restarts everything at 3:00 AM PST (our server is 7 hours ahead PST)
+# allows new updates to reach the server overnight, keeps it fresh
+# NOTE: Depending on your time zone you may need to adjust the time here
+0 10 * * * /home/ubuntu/bogl-deploy-scripts/./rebuild-reboot.sh >> /home/ubuntu/bogl-restarts.log
+```
+
+At this point you may have to make adjustments to `/etc/nginx/sites-available/bogl_nginx_config` to ensure that the domain you are using is being properly referenced, as well as the TLS certs (which you should note while running `setup.sh`) that you will need to update for your domain. This file was created when you ran the `setup.sh` script, and is used by `nginx` to manage serving of the backend and frontend.
+
+Whenever you make a change to the nginx config, run `sudo nginx -s reload` to apply your changes.
+
+If you are not using TLS/SSL, you can turn this by using the last `server` block, changing the port to 80 on both parts (without ssl), and removing the ssl cert & key elements.
+
+## Explanation of the Scripts
+- setup.sh
+	- Installs everything you will need on your system to run Haskell, the webserver, React, and more. **Run this first, once**.
 - auto_restart.sh
-	- automatically reboots the instance in case it turns off (crashes), or during updates. This is regulated by an addition to your CRON file as so:
-- fireup.sh
-	- this is responsible for starting up an instance, and making rebuilds and updates for the back and frontend automatically upon starting up
+	- automatically reboots the instance in case it turns off (crashes), or during updates. This is used by your CRON script.
+- rebuild-reboot.sh
+	- this is responsible for rebuilding the front & backend, and rebooting the server. This is used by your CRON script (but you can also manually trigger a build-boot sequence when you want).
 - teardown.sh
 	- Shutdown script that looks for an instance of **spielserver** by name, and kills the process. Do not use this if you are running more than one spielserver instance on your machine, but normally this should be just fine.
-- update_spielserver.sh
-	- Updates the backend system (DEPRECATED)
 
-**fireup.sh** is sufficient to start up *everything* and auto-update, so long as the Spiel-Lang and Spiel-Front repositories are located in the same folder.
-
-
-## Additional Files
-- spiel_server_setup.txt
-	- contains some hand written notes on setting up things, this may be helpful if you get stuck or want to make additional changes
-- ex_runcmd_bogl_curl.txt
-	- provides a drop-in example of making a local **curl** request to test the REST endpoints via a POST request. Handy for verifying things are running before you test out the website directly. 
-
-## CRON file changes
-Assuming your home folder is `/home/ubuntu`, you may use the following, and if not make sure to adjust to your home folder accordingly. This sets up a weak monitoring system that will auto reboot in case it crashes out, and logs any restarts.
-
-The next bit restarts once a day to apply new updates (via the fireup script), always pulling from the master.
-
-Together, this forms a crude hands-free production system.
-```
-# auto reboot every minute
-#* * * * * echo "Hello There" > /home/ubuntu/TEST_WORKS.txt
-* * * * * /home/ubuntu/./auto_restart.sh >> /home/ubuntu/restarts.log
-
-# shuts down and restarts everything at 3:00 AM PST (the server is 7 hours ahead PST), allows new updates to$
-# we'll see if this works or not
-0 10 * * * /home/ubuntu/./fireup.sh >> /home/ubuntu/restarts.log
-```
-
-## NGINX Configs
-The sole bogl config file is used to configure nginx to serve for 'bogl.engr.oregonstate.edu'. This can be adjusted based on your own domain, but is tailored to combine Spiel-Front (front) and Spiel-Lang (backend) together from a user's view. You will want to copy this over to **/etc/nginx/sites-available**, and then create a symbolic link to **/etc/nginx/sites-enabled**.
+**rebuild-reboot.sh** is sufficient to start up *everything* and auto-update, so long as the bogl and bogl-editor repositories are located in the same folder.
