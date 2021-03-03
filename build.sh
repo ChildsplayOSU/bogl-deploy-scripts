@@ -23,6 +23,8 @@ cd ..
 
 # rebuild the frontend, nginx will auto serve the new content
 cd bogl-editor/
+npm install
 npm run build
+sudo cp -r build/* /var/www/html/bogl/editor/
 
 echo "* build done"
