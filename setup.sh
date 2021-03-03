@@ -78,4 +78,5 @@ sudo cp var/www/html/errors/*.html /var/www/html/errors/
 ./build.sh
 
 # start everything up
+mkdir bogl-logs
 ./boot.sh
