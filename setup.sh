@@ -67,12 +67,12 @@ echo ""
 read ccc
 
 # move contents over for site
-mkdir -p /var/www/html/bogl
-mkdir -p /var/www/html/errors
-mkdir -p /var/www/html/bogl/docs
-mkdir -p /var/www/html/bogl/editor
+sudo mkdir -p /var/www/html/bogl
+sudo mkdir -p /var/www/html/errors
+sudo mkdir -p /var/www/html/bogl/docs
+sudo mkdir -p /var/www/html/bogl/editor
 
-cp var/www/html/errors/*.html /var/www/html/errors/
+sudo cp var/www/html/errors/*.html /var/www/html/errors/
 
 # build everything
 ./build.sh

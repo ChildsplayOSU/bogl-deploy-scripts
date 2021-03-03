@@ -2,7 +2,7 @@
 # build.sh
 #
 
-echo "* updateing & building bogl & bogl-editor"
+echo "* updating & building bogl & bogl-editor"
 
 # update existing instances
 cd bogl
