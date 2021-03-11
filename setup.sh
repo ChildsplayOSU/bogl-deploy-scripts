@@ -74,6 +74,9 @@ sudo mkdir -p /var/www/html/bogl/editor
 
 sudo cp var/www/html/errors/*.html /var/www/html/errors/
 
+# boot up nginx
+sudo nginx
+
 # build everything
 ./build.sh
 

@@ -16,3 +16,5 @@ kill `ps -U ubuntu | grep -E "spielserver"`
 
 dt=`date +"%F-%T"`
 ./bogl/spielserver 5174 > bogl-logs/spielserver_log_$dt.log 2>&1 &
+
+echo "* Server booted & running in the background on port 5174"

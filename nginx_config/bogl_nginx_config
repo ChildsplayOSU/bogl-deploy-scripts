@@ -118,6 +118,10 @@ server {
           root /var/www/html/bogl/docs;
           try_files $uri $uri/ $uri.html =404;
   }
+	location /docs/ {
+          root /var/www/html/bogl/docs;
+          try_files $uri $uri/ $uri.html =404;
+  }
   location ~ ^/(pages.json|robots.txt|sitemap.xml|sw.caches.js)$ {
           root /var/www/html/bogl/docs;
           try_files $uri $uri/ $uri.html =404;
