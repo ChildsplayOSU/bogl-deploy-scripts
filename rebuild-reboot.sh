@@ -13,14 +13,14 @@ PATH=/home/ubuntu/.local/bin:/home/ubuntu/.local/bin/stack:/usr/local/sbin:/usr/
 cd /home/ubuntu/bogl-deploy-scripts/
 
 # check if the backend is already running
-runBack=`ps -e | grep spielserver | wc -l`
+runBack=`ps -e | grep boglserver | wc -l`
 
 if [ $runBack -eq 1 ]; then
 	# stop running instances
 	./teardown.sh
 	# wait a moment to continue
 	echo ""
-	echo "* Stopped existing spielserver instance, waiting 5 seconds to continue..."
+	echo "* Stopped existing boglserver instance, waiting 5 seconds to continue..."
 	sleep 5
 fi
 
@@ -28,7 +28,7 @@ fi
 echo "* Rebuilding"
 
 # run and background the webserver
-echo "* Rebooting & Backgrounding spielserver w/ logs..."
+echo "* Rebooting & Backgrounding boglserver w/ logs..."
 ./boot.sh
 
 echo "* Done"

@@ -40,6 +40,6 @@ If you are not using TLS/SSL, you can turn this by using the last `server` block
 - rebuild-reboot.sh
 	- this is responsible for rebuilding the front & backend, and rebooting the server. This is used by your CRON script (but you can also manually trigger a build-boot sequence when you want).
 - teardown.sh
-	- Shutdown script that looks for an instance of **spielserver** by name, and kills the process. Do not use this if you are running more than one spielserver instance on your machine, but normally this should be just fine.
+	- Shutdown script that looks for an instance of **boglserver** by name, and kills the process. Do not use this if you are running more than one boglserver instance on your machine, but normally this should be just fine.
 
 **rebuild-reboot.sh** is sufficient to start up *everything* and auto-update, so long as the bogl and bogl-editor repositories are located in the same folder.

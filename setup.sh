@@ -51,7 +51,7 @@ sudo apt-get install certbot
 # generate a cert
 echo ""
 echo "Alright, when certbot asks you to set things up, make sure you enter a non-AWS domain."
-echo "Any subdomain will work (such as spiel.uphouseworks.com), so long as there is an associated CNAME"
+echo "Any subdomain will work (such as bogl.uphouseworks.com), so long as there is an associated CNAME"
 echo "record pointing to this server's domain."
 echo ""
 echo "Hit Enter to continue"

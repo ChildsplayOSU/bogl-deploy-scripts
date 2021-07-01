@@ -2,7 +2,7 @@
 
 #
 # auto_restart.sh
-# Used to monitor and automatically restart the spielserver (code name for the bogl server) instance, in case it goes down
+# Used to monitor and automatically restart the boglserver (code name for the bogl server) instance, in case it goes down
 # @montymxb
 #
 
@@ -13,7 +13,7 @@ PATH=/home/ubuntu/.local/bin:/home/ubuntu/.local/bin/stack:/usr/local/sbin:/usr/
 cd /home/ubuntu/bogl-deploy-scripts/
 
 # check if the backend is running
-runBack=`ps -e | grep spielserver | wc -l`
+runBack=`ps -e | grep boglserver | wc -l`
 
 if [ $runBack -eq 0 ]; then
 	# super fast reboot

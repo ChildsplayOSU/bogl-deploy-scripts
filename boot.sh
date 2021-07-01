@@ -9,12 +9,12 @@
 # @montymxb
 #
 
-# super lazy kill, just stops anything that matches the term 'spielserver'
+# super lazy kill, just stops anything that matches the term 'boglserver'
 # this is very crude, but works rather simply
 # NOTE: This assumes the user is 'ubuntu', change as necessary
-kill `ps -U ubuntu | grep -E "spielserver"`
+kill `ps -U ubuntu | grep -E "boglserver"`
 
 dt=`date +"%F-%T"`
-./bogl/spielserver 5174 > bogl-logs/spielserver_log_$dt.log 2>&1 &
+./bogl/boglserver 5174 > bogl-logs/boglserver_log_$dt.log 2>&1 &
 
 echo "* Server booted & running in the background on port 5174"
