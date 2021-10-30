@@ -1,0 +1,5 @@
+# attempt to renew any certs at 3:05 AM PST
+5 10 * * * certbot renew >> /dev/null
+
+# reload nginx at 3:10 AM pst
+10 10 * * * nginx -s reload >> /dev/null

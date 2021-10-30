@@ -4,13 +4,21 @@
 
 echo "* updating & building bogl & bogl-editor"
 
-# update existing instances
+# update bogl
 cd bogl
 git stash
 git checkout master
 git pull
 
+# update editor
 cd ../bogl-editor
+git stash
+git checkout master
+git pull
+cd ..
+
+# update docs
+cd ../bogl-docs
 git stash
 git checkout master
 git pull
@@ -26,5 +34,12 @@ cd bogl-editor/
 npm install
 npm run build
 sudo cp -r build/* /var/www/html/bogl/editor/
+cd ..
+
+# rebuild the docs
+cd bogl-docs/
+bundle exec jekyll build
+sudo rsync -r _site/ /var/www/html/bogl/docs/
+cd ..
 
 echo "* build done"

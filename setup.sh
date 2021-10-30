@@ -18,25 +18,21 @@ read qqq
 sudo apt update
 sudo apt upgrade
 
-# clone repos
-git clone https://github.com/The-Code-In-Sheep-s-Clothing/bogl.git
-git clone https://github.com/The-Code-In-Sheep-s-Clothing/bogl-editor.git
+# clone repos (bogl, editor, docs)
+git clone https://github.com/ChildsplayOSU/bogl.git
+git clone https://github.com/ChildsplayOSU/bogl-editor.git
+git clone https://github.com/ChildsplayOSU/bogl-docs.git
 
 # setup dev deps
-sudo apt install haskell-stack
-sudo apt install cabal-install
-sudo apt install zlib1g-dev
+sudo apt install haskell-stack cabal-install zlib1g-dev ruby-bundler ruby-dev g++
+
 # get node 12x
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo apt install npm
-
-# setup nginx for the webserver
-sudo apt-get install nginx
+sudo apt install nodejs npm nginx
 
 # Copy over & setup the nginx config
-sudo cp nginx_config/bogl_nginx_config /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/bogl_nginx_config /etc/nginx/sites-enabled/bogl_nginx_config
+sudo cp nginx_config/bogl_nginx_config_httponly /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/bogl_nginx_config_httponly /etc/nginx/sites-enabled/bogl_nginx_config_httponly
 
 # certbot setup for TLS certs
 sudo apt-get update
@@ -44,6 +40,15 @@ sudo apt-get install software-properties-common
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
+
+# pre-emptively make this folder so we can use certbot properly
+sudo mkdir -p /var/www/html/bogl
+sudo mkdir -p /var/www/html/errors
+sudo mkdir -p /var/www/html/bogl/docs
+sudo mkdir -p /var/www/html/bogl/editor
+
+# boot up nginx
+sudo nginx
 
 # install certbot, optional to setup booting with everything in-tact
 sudo apt-get install certbot
@@ -57,7 +62,7 @@ echo ""
 echo "Hit Enter to continue"
 echo ""
 read ccc
-sudo certbot certonly --standalone
+sudo certbot certonly --webroot --webroot-path /var/www/html/bogl/editor/ --domain bogl.engr.oregonstate.edu
 
 echo ""
 echo "Make a note of the Cert & Key file generated, you will need these to setup HTTPS for the site"
@@ -66,16 +71,15 @@ echo "Hit Enter to continue"
 echo ""
 read ccc
 
+# remove the old config, using the http one now
+sudo rm /etc/nginx/sites-enabled/bogl_nginx_config_httponly
+sudo rm /etc/nginx/sites-available/bogl_nginx_config_httponly
+sudo cp nginx_config/bogl_nginx_config /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/bogl_nginx_config /etc/nginx/sites-enabled/bogl_nginx_config
+sudo service nginx reload
+
 # move contents over for site
-sudo mkdir -p /var/www/html/bogl
-sudo mkdir -p /var/www/html/errors
-sudo mkdir -p /var/www/html/bogl/docs
-sudo mkdir -p /var/www/html/bogl/editor
-
 sudo cp var/www/html/errors/*.html /var/www/html/errors/
-
-# boot up nginx
-sudo nginx
 
 # build everything
 ./build.sh
@@ -83,3 +87,7 @@ sudo nginx
 # start everything up
 mkdir bogl-logs
 ./boot.sh
+
+# finally, setup the docs
+cd bogl-docs
+bundle install

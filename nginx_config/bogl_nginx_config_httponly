@@ -1,0 +1,44 @@
+#
+# NGINX Website Config File
+# Intended for: bogl.engr.oregonstate.edu
+#
+# Created Oct 30th, 2021
+# Benjamin Friedman Wilson
+# Intended for use w/ the CSforAll curriculum
+#
+# (TEMPORARY) Serves the static website over HTTP to allow for an SSL cert to generated first, then removed afterwards
+#
+# Generally, this should be in... (to mark it as an available site)
+#
+
+# insecure server to allow quick cert setup via Letsencrypt
+server {
+	listen 80;
+	listen [::]:80;
+	server_name bogl.engr.oregonstate.edu;
+
+  root /var/www/html/bogl/editor/;
+
+  index index.html index.htm;
+
+	# error pages
+	error_page 404 /404.html;
+	error_page 403 /403.html;
+	location = /404.html {
+		root /var/www/html/errors/;
+		internal;
+	}
+	location = /403.html {
+		root /var/www/html/errors/;
+		internal;
+	}
+
+	# location for everything else
+	# editor and such
+	location / {
+		# try to serve as file, then dir, then 404 error
+		try_files $uri $uri/ $uri.html =404;
+	}
+
+
+}

@@ -1,0 +1,7 @@
+# auto reboot every minute
+* * * * * /home/ubuntu/bogl-deploy-scripts/./auto_restart.sh >> /home/ubuntu/bogl-restarts.log
+
+# shuts down and restarts everything at 3:00 AM PST (our server is 7 hours ahead PST)
+# allows new updates to reach the server overnight, keeps it fresh
+# NOTE: Depending on your time zone you may need to adjust the time here
+0 10 * * * /home/ubuntu/bogl-deploy-scripts/./rebuild-reboot.sh >> /home/ubuntu/bogl-restarts.log
