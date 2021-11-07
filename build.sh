@@ -38,6 +38,8 @@ cd ..
 
 # rebuild the docs
 cd bogl-docs/
+# ensure to run a quick bundle install, in case new deps are present
+bundle install
 bundle exec jekyll build
 sudo rsync -r _site/ /var/www/html/bogl/docs/
 cd ..
